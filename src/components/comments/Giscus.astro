@@ -1,0 +1,48 @@
+---
+interface Props {
+	lang?: string;
+}
+
+const { lang = "zh_CN" } = Astro.props;
+const normalizedLang = lang.toLowerCase().replace("_", "-");
+const giscusLang = normalizedLang.startsWith("en") ? "en" : "zh-CN";
+
+const repo = import.meta.env.PUBLIC_GISCUS_REPO || "soli-rev/blog-comments";
+const repoId = import.meta.env.PUBLIC_GISCUS_REPO_ID;
+const category = import.meta.env.PUBLIC_GISCUS_CATEGORY || "Comments";
+const categoryId = import.meta.env.PUBLIC_GISCUS_CATEGORY_ID;
+const enabled = repoId && categoryId;
+---
+
+{
+	enabled ? (
+		<section class="card-base rounded-xl px-6 py-5 onload-animation">
+			<script
+				is:inline
+				src="https://giscus.app/client.js"
+				data-repo={repo}
+				data-repo-id={repoId}
+				data-category={category}
+				data-category-id={categoryId}
+				data-mapping="pathname"
+				data-strict="1"
+				data-reactions-enabled="1"
+				data-emit-metadata="0"
+				data-input-position="bottom"
+				data-theme="preferred_color_scheme"
+				data-lang={giscusLang}
+				data-loading="lazy"
+				crossorigin="anonymous"
+				async
+			/>
+		</section>
+	) : (
+		import.meta.env.DEV && (
+			<section class="card-base rounded-xl px-6 py-5 text-sm text-50 onload-animation">
+				giscus comments are configured for soli-rev/blog-comments. Set
+				PUBLIC_GISCUS_REPO_ID and PUBLIC_GISCUS_CATEGORY_ID after enabling
+				GitHub Discussions.
+			</section>
+		)
+	)
+}
