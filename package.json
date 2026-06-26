@@ -3,8 +3,8 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev": "astro dev",
-    "start": "astro dev",
+    "dev": "node scripts/run-with-env.cjs astro dev",
+    "start": "node scripts/run-with-env.cjs astro dev",
     "check": "node scripts/run-with-env.cjs astro check",
     "build": "node scripts/run-with-env.cjs astro build && node scripts/run-with-env.cjs pagefind --site dist",
     "preview": "node scripts/run-with-env.cjs astro preview",
