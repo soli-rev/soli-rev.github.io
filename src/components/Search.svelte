@@ -1,6 +1,6 @@
 <script lang="ts">
 import I18nKey from "@i18n/i18nKey";
-import { i18n } from "@i18n/translation";
+import { getCurrentLanguage, i18n } from "@i18n/translation";
 import Icon from "@iconify/svelte";
 import { url } from "@utils/url-utils.ts";
 import { onMount } from "svelte";
@@ -12,6 +12,7 @@ let result: SearchResult[] = [];
 let isSearching = false;
 let pagefindLoaded = false;
 let initialized = false;
+let currentLang = getCurrentLanguage();
 
 const fakeResult: SearchResult[] = [
 	{
@@ -87,6 +88,11 @@ const search = async (keyword: string, isDesktop: boolean): Promise<void> => {
 };
 
 onMount(() => {
+	const syncLanguage = () => {
+		currentLang = getCurrentLanguage();
+	};
+	document.addEventListener("swup:page:view", syncLanguage);
+
 	const initializeSearch = () => {
 		initialized = true;
 		pagefindLoaded =
@@ -123,6 +129,10 @@ onMount(() => {
 			}
 		}, 2000); // Adjust timeout as needed
 	}
+
+	return () => {
+		document.removeEventListener("swup:page:view", syncLanguage);
+	};
 });
 
 $: if (initialized && keywordDesktop) {
@@ -144,7 +154,7 @@ $: if (initialized && keywordMobile) {
       dark:bg-white/5 dark:hover:bg-white/10 dark:focus-within:bg-white/10
 ">
     <Icon icon="material-symbols:search" class="absolute text-[1.25rem] pointer-events-none ml-3 transition my-auto text-black/30 dark:text-white/30"></Icon>
-    <input placeholder="{i18n(I18nKey.search)}" bind:value={keywordDesktop} on:focus={() => search(keywordDesktop, true)}
+    <input placeholder="{i18n(I18nKey.search, currentLang)}" bind:value={keywordDesktop} on:focus={() => search(keywordDesktop, true)}
            class="transition-all pl-10 text-sm bg-transparent outline-0
          h-full w-40 active:w-60 focus:w-60 text-black/50 dark:text-white/50"
     >
@@ -166,7 +176,7 @@ top-20 left-4 md:left-[unset] right-4 shadow-2xl rounded-2xl p-2">
       dark:bg-white/5 dark:hover:bg-white/10 dark:focus-within:bg-white/10
   ">
         <Icon icon="material-symbols:search" class="absolute text-[1.25rem] pointer-events-none ml-3 transition my-auto text-black/30 dark:text-white/30"></Icon>
-        <input placeholder="Search" bind:value={keywordMobile}
+        <input placeholder={i18n(I18nKey.search, currentLang)} bind:value={keywordMobile}
                class="pl-10 absolute inset-0 text-sm bg-transparent outline-0
                focus:w-60 text-black/50 dark:text-white/50"
         >

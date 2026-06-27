@@ -23,8 +23,11 @@ const map: { [key: string]: Translation } = {
 	en_us: en,
 	en_gb: en,
 	en_au: en,
+	zh: zh_CN,
 	zh_cn: zh_CN,
+	zh_hans: zh_CN,
 	zh_tw: zh_TW,
+	zh_hant: zh_TW,
 	ja: ja,
 	ja_jp: ja,
 	ko: ko,
@@ -39,10 +42,17 @@ const map: { [key: string]: Translation } = {
 };
 
 export function getTranslation(lang: string): Translation {
-	return map[lang.toLowerCase()] || defaultTranslation;
+	return map[lang.toLowerCase().replace("-", "_")] || defaultTranslation;
 }
 
-export function i18n(key: I18nKey): string {
-	const lang = siteConfig.lang || "en";
-	return getTranslation(lang)[key];
+export function getCurrentLanguage(): string {
+	if (typeof document !== "undefined") {
+		return document.documentElement.lang || siteConfig.lang || "en";
+	}
+	return siteConfig.lang || "en";
+}
+
+export function i18n(key: I18nKey, lang?: string): string {
+	const currentLang = lang || getCurrentLanguage();
+	return getTranslation(currentLang)[key];
 }

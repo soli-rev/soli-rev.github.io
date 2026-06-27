@@ -25,19 +25,26 @@ export function getPostUrlBySlug(slug: string, lang?: string): string {
 	return url(`${isEnglishPostLang(lang) ? "/en" : ""}/posts/${slug}/`);
 }
 
-export function getTagUrl(tag: string): string {
-	if (!tag) return url("/archive/");
-	return url(`/archive/?tag=${encodeURIComponent(tag.trim())}`);
+function languagePrefix(lang?: string): string {
+	return isEnglishPostLang(lang) ? "/en" : "";
 }
 
-export function getCategoryUrl(category: string | null): string {
+export function getTagUrl(tag: string, lang?: string): string {
+	const prefix = languagePrefix(lang);
+	if (!tag) return url(`${prefix}/archive/`);
+	return url(`${prefix}/archive/?tag=${encodeURIComponent(tag.trim())}`);
+}
+
+export function getCategoryUrl(category: string | null, lang?: string): string {
+	const prefix = languagePrefix(lang);
 	if (
 		!category ||
 		category.trim() === "" ||
-		category.trim().toLowerCase() === i18n(I18nKey.uncategorized).toLowerCase()
+		category.trim().toLowerCase() ===
+			i18n(I18nKey.uncategorized, lang).toLowerCase()
 	)
-		return url("/archive/?uncategorized=true");
-	return url(`/archive/?category=${encodeURIComponent(category.trim())}`);
+		return url(`${prefix}/archive/?uncategorized=true`);
+	return url(`${prefix}/archive/?category=${encodeURIComponent(category.trim())}`);
 }
 
 export function getDir(path: string): string {

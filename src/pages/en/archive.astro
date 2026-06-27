@@ -8,6 +8,6 @@ import { getSortedPostsListByLang } from "../../utils/content-utils";
 const sortedPostsList = await getSortedPostsListByLang("en");
 ---
 
-<MainGridLayout title={i18n(I18nKey.archive)} lang="en">
+<MainGridLayout title={i18n(I18nKey.archive, "en")} lang="en">
 	<ArchivePanel sortedPosts={sortedPostsList} client:only="svelte" />
 </MainGridLayout>
