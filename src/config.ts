@@ -52,7 +52,7 @@ export const navBarConfig: NavBarConfig = {
 };
 
 export const profileConfig: ProfileConfig = {
-	avatar: undefined,
+	avatar: "/images/avatar-solirev.png",
 	name: "soli-rev",
 	bio: "An anonymous notebook for essays, fragments, and side thoughts.",
 	links: [
